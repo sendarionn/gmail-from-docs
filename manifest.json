@@ -10,7 +10,7 @@
     "https://docs.googleapis.com/*"
   ],
   "oauth2": {
-    "client_id": "REPLACE_WITH_CHROME_EXTENSION_CLIENT_ID.apps.googleusercontent.com",
+    "client_id": "249897706501-n21bnb6vvd1mtv8a2qijr7qh6a1qmltq.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/gmail.readonly",
       "https://www.googleapis.com/auth/gmail.compose",

@@ -20,6 +20,8 @@
 - 対応情報と所有者メールアドレスをDriveの`appProperties`へ保存する
 - 下書きには文書IDの独自ヘッダーを付け、Drive側の保存失敗やService Worker再起動後も既存下書きを再検出する
 - 所有者と実行中Gmailアカウントが異なる場合は反映を拒否する
+- Gmail APIの`threadId`はWeb UIのURL生成に使用せず、Docs作成時の元URLを分割して`appProperties`へ保存する
+- 元URLを安全に復元できない既存文書では、所有者を`authuser`で指定したGmail下書き一覧を開く
 
 ## 実機検証が必要な項目
 

@@ -2,6 +2,7 @@ import { apiFetch } from "./google-api.js"
 import { AppError } from "../lib/errors.js"
 import { buildReplyRaw, headerValue } from "../lib/message.js"
 import { createDocumentText, extractReplyText } from "../lib/document-format.js"
+import { gmailUrlProperties, resolveGmailNavigation } from "../lib/gmail-navigation.js"
 
 const DRIVE_FILES = "https://www.googleapis.com/drive/v3/files"
 const DOCS = "https://docs.googleapis.com/v1/documents"
@@ -46,7 +47,8 @@ async function createDocument(context, message, ownerEmail) {
       gmailFromDocs: "v1",
       gmailFromDocsThreadId: message.threadId,
       gmailFromDocsMessageId: message.id,
-      gmailFromDocsOwner: ownerEmail
+      gmailFromDocsOwner: ownerEmail,
+      ...gmailUrlProperties(context.gmailUrl)
     } })
   })
   return { id: doc.documentId }
@@ -62,6 +64,15 @@ export async function openOrCreateDocument(context) {
   ])
   const existing = await findDocument(message.threadId, profile.emailAddress)
   const document = existing ?? await createDocument(context, message, profile.emailAddress)
+  if (existing) {
+    const navigationProperties = gmailUrlProperties(context.gmailUrl)
+    if (Object.keys(navigationProperties).length) {
+      await apiFetch(`${DRIVE_FILES}/${existing.id}?supportsAllDrives=true`, {
+        method: "PATCH",
+        body: JSON.stringify({ appProperties: navigationProperties })
+      })
+    }
+  }
   return { url: `https://docs.google.com/document/d/${document.id}/edit`, reused: Boolean(existing) }
 }
 
@@ -113,10 +124,16 @@ export async function reflectDocument(documentId) {
     documentId
   })
   const draft = await saveDraft({ draftId: existing?.id, threadId: source.threadId, raw })
+  if (!draft?.id || draft.message?.threadId !== source.threadId) {
+    throw new AppError("DRAFT_NOT_CONFIRMED", "Gmail下書きの保存結果を確認できません", "Gmailの下書き一覧を確認してから再実行してください")
+  }
+  const navigation = resolveGmailNavigation(properties, profile.emailAddress)
   return {
     draftId: draft.id,
+    threadId: draft.message.threadId,
     updated: Boolean(existing),
-    gmailUrl: `https://mail.google.com/mail/u/${encodeURIComponent(profile.emailAddress)}/#all/${source.threadId}`
+    gmailUrl: navigation.url,
+    destination: navigation.destination
   }
 }
 

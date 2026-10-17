@@ -12,6 +12,7 @@ Gmailの返信文をGoogle Docsで共同編集し、元スレッドの返信下�
 - Docsの返信領域だけをGmail下書きへ反映
 - 既存の管理対象下書きを再利用して更新
 - メール担当者以外のGmailアカウントからの反映を拒否
+- Gmail APIのスレッドIDを画面URLへ流用せず、保存した元Gmail URLへ戻る
 
 ## Google Cloudの設定
 

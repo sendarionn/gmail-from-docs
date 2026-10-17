@@ -17,17 +17,28 @@
     const button = event.currentTarget
     button.disabled = true
     button.textContent = "反映中"
+    let response
     try {
-      const response = await chrome.runtime.sendMessage({ type: "REFLECT_DOCUMENT", documentId })
+      response = await chrome.runtime.sendMessage({ type: "REFLECT_DOCUMENT", documentId })
       if (!response.ok) throw response.error
-      status(response.data.updated ? "Gmailの下書きを更新しました" : "Gmailに下書きを作成しました")
-      window.open(response.data.gmailUrl, "_blank", "noopener")
     } catch (error) {
       status(`${error.message ?? "反映に失敗しました"}${error.action ? `\n${error.action}` : ""}`)
-    } finally {
       button.disabled = false
       button.textContent = "Gmailに反映"
+      return
     }
+
+    const saved = response.data.updated ? "Gmailの下書きを更新しました" : "Gmailに下書きを作成しました"
+    const destination = response.data.destination === "drafts" ? "\n元スレッドURLを確認できないため下書き一覧を開きます" : ""
+    status(`${saved}${destination}`)
+    try {
+      const navigation = await chrome.runtime.sendMessage({ type: "OPEN_GMAIL", url: response.data.gmailUrl })
+      if (!navigation.ok) throw navigation.error
+    } catch {
+      status(`${saved}\n画面を開けませんでしたが、下書きは保存済みです`)
+    }
+    button.disabled = false
+    button.textContent = "Gmailに反映"
   }
 
   async function addButton() {
