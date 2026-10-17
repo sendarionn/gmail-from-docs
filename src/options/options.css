@@ -1,0 +1,6 @@
+body { color: #202124; font: 14px/1.5 Arial, sans-serif; margin: 0; }
+main { margin: 40px auto; max-width: 680px; padding: 0 24px; }
+h1 { font-size: 24px; }
+h2 { font-size: 18px; margin-top: 32px; }
+button { background: #0b57d0; border: 0; border-radius: 4px; color: white; cursor: pointer; padding: 10px 16px; }
+#status { min-height: 24px; }

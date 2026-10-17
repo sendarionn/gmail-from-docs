@@ -1,0 +1,31 @@
+.gmail-from-docs-button {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 18px;
+  box-sizing: border-box;
+  color: #3c4043;
+  cursor: pointer;
+  display: inline-flex;
+  font: 500 14px/34px Arial, sans-serif;
+  height: 36px;
+  margin: 8px;
+  padding: 0 16px;
+  white-space: nowrap;
+  z-index: 9999;
+}
+.gmail-from-docs-button:hover { background: #f8fafd; }
+.gmail-from-docs-button:disabled { cursor: progress; opacity: .65; }
+.gmail-from-docs-status {
+  background: #202124;
+  border-radius: 4px;
+  bottom: 24px;
+  color: #fff;
+  font: 14px/20px Arial, sans-serif;
+  left: 24px;
+  max-width: 420px;
+  padding: 12px 16px;
+  position: fixed;
+  z-index: 2147483647;
+}
+.gmail-from-docs-docs-button { position: fixed; right: 180px; top: 8px; }

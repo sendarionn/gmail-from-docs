@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "gmail-from-docs",
+  "version": "0.1.0",
+  "description": "Gmailの返信文をGoogle Docsで共同編集し、返信下書きへ反映します",
+  "permissions": ["identity", "storage"],
+  "host_permissions": [
+    "https://gmail.googleapis.com/*",
+    "https://www.googleapis.com/*",
+    "https://docs.googleapis.com/*"
+  ],
+  "oauth2": {
+    "client_id": "REPLACE_WITH_CHROME_EXTENSION_CLIENT_ID.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.compose",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/documents"
+    ]
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["src/content/gmail.js"],
+      "css": ["src/content/common.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://docs.google.com/document/d/*"],
+      "js": ["src/content/docs.js"],
+      "css": ["src/content/common.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "src/options/options.html"
+}
